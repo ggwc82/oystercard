@@ -15,4 +15,8 @@ class OysterCard
   def new_balance(money)
     @balance + money
   end
+
+  def deduct(fare)
+    @balance -= fare
+  end
 end

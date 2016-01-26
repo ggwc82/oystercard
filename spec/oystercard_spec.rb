@@ -22,4 +22,11 @@ describe OysterCard do
       expect(card.balance).to eq 0
     end
   end
+
+  describe '#deduct' do
+    it 'deducts the passed amount from balance' do
+      card.top_up(20.00)
+      expect{card.deduct(10.00)}.to change{card.balance}.by(-10.00)
+    end
+  end
 end

@@ -2,4 +2,4 @@ Objects		Messages
 ------------------------
 customer	
 money		
-card		top_up(money), balance, max_limit
+card		  top_up(money), balance, max_limit, deduct(fare)
