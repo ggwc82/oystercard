@@ -23,13 +23,6 @@ describe OysterCard do
     end
   end
 
-  describe '#deduct' do
-    it 'deducts the passed amount from balance' do
-      card.top_up(20.00)
-      expect{card.deduct(10.00)}.to change{card.balance}.by(-10.00)
-    end
-  end
-
   describe '#in_journey?' do
     it 'returns boolean and is false by default' do
       expect(card).not_to be_in_journey
@@ -53,6 +46,12 @@ describe OysterCard do
       card.top_up(1.00)
       card.touch_in
       expect{card.touch_out}.to change{card.in_journey?}.to eq false
+    end
+
+    it 'charges card when touching out' do
+      card.top_up 1
+      card.touch_in
+      expect{card.touch_out}.to change{card.balance}.by -OysterCard::MINIMUM_BALANCE
     end
   end
 

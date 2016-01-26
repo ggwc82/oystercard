@@ -10,16 +10,8 @@ class OysterCard
   end
 
   def top_up(money)
-    raise "Warning! Cannot add more than #{Limit}" if new_balance(money) > Limit
-    @balance = new_balance(money)
-  end
-
-  def new_balance(money)
-    @balance + money
-  end
-
-  def deduct(fare)
-    @balance -= fare
+    raise "Warning! Cannot add more than #{Limit}" if new_balance?(money)
+    @balance += money
   end
 
   def in_journey?
@@ -32,7 +24,18 @@ class OysterCard
   end
 
   def touch_out
+    deduct(MINIMUM_BALANCE)
     @in_journey = false
+  end
+
+  private
+
+  def deduct(fare)
+    @balance -= fare
+  end
+
+  def new_balance?(money)
+    (@balance + money) > Limit
   end
 
 end
