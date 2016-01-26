@@ -38,15 +38,23 @@ describe OysterCard do
 
   describe '#touch_in' do
     it 'changes state of in_journey to be true' do
+      card.top_up(1.00)
       card.touch_in
       expect(card).to be_in_journey
+    end
+
+    it "can't touch_in if below minimum_balance" do
+      expect{card.touch_in}.to raise_error("minimum balance not met")
     end
   end
 
   describe '#touch_out' do
     it 'changes state of in_journey to be false' do
+      card.top_up(1.00)
       card.touch_in
       expect{card.touch_out}.to change{card.in_journey?}.to eq false
     end
   end
+
+
 end
