@@ -2,7 +2,7 @@ require 'oystercard'
 
 describe OysterCard do
   subject(:card) { OysterCard.new }
-  
+
   describe '#top_up' do
     it 'responds to #top_up with 1 argument' do
       expect(card).to respond_to(:top_up).with(1).argument
@@ -27,6 +27,26 @@ describe OysterCard do
     it 'deducts the passed amount from balance' do
       card.top_up(20.00)
       expect{card.deduct(10.00)}.to change{card.balance}.by(-10.00)
+    end
+  end
+
+  describe '#in_journey?' do
+    it 'returns boolean and is false by default' do
+      expect(card).not_to be_in_journey
+    end
+  end
+
+  describe '#touch_in' do
+    it 'changes state of in_journey to be true' do
+      card.touch_in
+      expect(card).to be_in_journey
+    end
+  end
+
+  describe '#touch_out' do
+    it 'changes state of in_journey to be false' do
+      card.touch_in
+      expect{card.touch_out}.to change{card.in_journey?}.to eq false
     end
   end
 end
