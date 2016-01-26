@@ -3,7 +3,9 @@ require 'oystercard'
 describe OysterCard do
   subject(:card) { OysterCard.new }
 
-  let(:station) { double :station }
+  let(:entry_station) { double :station }
+  let(:exit_station) { double :station }
+  let(:journey) { { entry_station: entry_station, exit_station: exit_station } }
 
   describe '#top_up' do
     it 'responds to #top_up with 1 argument' do
@@ -34,17 +36,17 @@ describe OysterCard do
   describe '#touch_in' do
     it 'changes state of in_journey to be true' do
       card.top_up(1.00)
-      card.touch_in(station)
+      card.touch_in(entry_station)
       expect(card).to be_in_journey
     end
 
     it "can't touch_in if below minimum_balance" do
-      expect{card.touch_in(station)}.to raise_error("minimum balance not met")
+      expect{card.touch_in(entry_station)}.to raise_error("minimum balance not met")
     end
 
-    it 'stores entry station' do
+    it 'stores entry_station' do
       card.top_up 1
-      expect{card.touch_in(station)}.to change{card.entry_station}.to eq station
+      expect{card.touch_in(entry_station)}.to change{card.entry_station}.to eq entry_station
     end
 
   end
@@ -53,22 +55,39 @@ describe OysterCard do
 
     before do
       card.top_up 1
-      card.touch_in(station)
+      card.touch_in(entry_station)
     end
 
     it 'changes state of in_journey to be false' do
-      expect{card.touch_out}.to change{card.in_journey?}.to eq false
+      expect{card.touch_out(exit_station)}.to change{card.in_journey?}.to eq false
     end
 
     it 'charges card when touching out' do
-      expect{card.touch_out}.to change{card.balance}.by -OysterCard::MINIMUM_BALANCE
+      expect{card.touch_out(exit_station)}.to change{card.balance}.by -OysterCard::MINIMUM_BALANCE
     end
 
     it 'sets entry station to nil' do
-      expect{card.touch_out}.to change{card.entry_station}.to eq nil
+      expect{card.touch_out(exit_station)}.to change{card.entry_station}.to eq nil
     end
 
+    it 'stores exit station' do
+      card.touch_out(exit_station)
+      expect(card.exit_station).to eq exit_station
+    end
   end
 
+  describe "#journeys" do
+    it 'holds a a journey log' do
+      expect(card.journeys).to be_empty
+    end
 
+    it 'stores a journey' do
+      card.top_up(1.00)
+      card.touch_in(entry_station)
+      card.touch_out(exit_station)
+      expect(card.journeys).to include journey
+    end
+  end 
 end
+
+
