@@ -19,7 +19,7 @@ class OysterCard
   end
 
   def touch_in
-    raise "minimum balance not met" if @balance < MINIMUM_BALANCE
+    raise "minimum balance not met" if min_balance?
     @in_journey = true
   end
 
@@ -38,4 +38,7 @@ class OysterCard
     (@balance + money) > Limit
   end
 
+  def min_balance?
+    @balance < MINIMUM_BALANCE
+  end
 end
