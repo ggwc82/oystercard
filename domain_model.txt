@@ -2,4 +2,5 @@ Objects		Messages
 ------------------------
 customer	
 money		
-card		top_up(money), balance, max_limit, deduct(fare), in_journey?, touch_in/out, minimum_balance
+card		top_up(money), balance, max_limit, deduct(fare), in_journey?, touch_in/out, minimum_balance, entry_station
+station        

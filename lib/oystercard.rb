@@ -1,31 +1,30 @@
 class OysterCard
-  Limit = 90.00
+  LIMIT = 90.00
   MINIMUM_BALANCE = 1.00
 
-  attr_reader :balance
+  attr_reader :balance, :entry_station
 
   def initialize
     @balance = 0
-    @in_journey = false
   end
 
   def top_up(money)
-    raise "Warning! Cannot add more than #{Limit}" if new_balance?(money)
+    raise "Warning! Cannot add more than #{LIMIT}" if new_balance?(money)
     @balance += money
   end
 
   def in_journey?
-    @in_journey
+    !!entry_station
   end
 
-  def touch_in
+  def touch_in(station)
     raise "minimum balance not met" if min_balance?
-    @in_journey = true
+    @entry_station = station
   end
 
   def touch_out
     deduct(MINIMUM_BALANCE)
-    @in_journey = false
+    @entry_station = nil
   end
 
   private
@@ -35,7 +34,7 @@ class OysterCard
   end
 
   def new_balance?(money)
-    (@balance + money) > Limit
+    (@balance + money) > LIMIT
   end
 
   def min_balance?
