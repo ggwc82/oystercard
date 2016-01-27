@@ -1,0 +1,5 @@
+Objects    |  Message
+___________|___________
+customer   |
+card       | card.top_up, card.touch_in, card.touch_out
+station    | station.zone
