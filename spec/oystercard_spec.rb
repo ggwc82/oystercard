@@ -1,69 +1,93 @@
 require 'oystercard'
 
 describe OysterCard do
-   let(:station){double :station}
+  let(:entry_station){double :station}
+  let(:exit_station){double :station}
+  let(:journey1){ {entry_station: entry_station, exit_station: exit_station} }
+  let(:journey2){ {entry_station: exit_station, exit_station: entry_station} }
+  subject(:card) { described_class.new }
+
   it 'has a balance of zero' do
-  	expect(subject.balance).to eq(0)
+    expect(card.balance).to eq(0)
   end
 
-describe '#top_up' do
-  it 'adds amount to balance' do
-  expect{subject.top_up(1)}.to change{subject.balance}.by 1
-end
-it 'raises an error when balance greater than limit' do
-    maximum_balance = OysterCard::MAXIMUM_BALANCE
-    subject.top_up(maximum_balance)
-	expect{ subject.top_up(1) }.to raise_error "error balance greater than #{maximum_balance}"
-end
-end
 
- describe '#deduct' do
-  it 'deducts the minimum' do
-  min_charge= OysterCard::MINIMUM_CHARGE
-  subject.top_up(10)
-  subject.touch_in(station)
-  expect{subject.touch_out}.to change{subject.balance}.by -(min_charge)
-end
- end
- describe '#touch_in' do
-  it 'it touches in' do
-  subject.top_up(1)
-  subject.touch_in(station)
-  expect(subject).to be_in_journey
-end
-end
- describe '#touch_out' do
- it 'touches out' do
-  subject.top_up(1)
-  subject.touch_in(station)
-  subject.touch_out
-  expect(subject).not_to be_in_journey
-end
-end
+  describe '#top_up' do
+    it 'adds amount to balance' do
+      expect{card.top_up(1)}.to change{card.balance}.by 1
+    end
 
- describe '#in_journey?' do
+    it 'raises an error when balance greater than limit' do
+      maximum_balance = OysterCard::MAXIMUM_BALANCE
+      card.top_up(maximum_balance)
+      expect{ card.top_up(1) }.to raise_error "error balance greater than #{maximum_balance}"
+    end
+  end
+
+  describe '#deduct' do
+    it 'deducts the minimum' do
+      min_charge = OysterCard::MINIMUM_CHARGE
+      card.top_up(10)
+      card.touch_in(entry_station)
+      expect{card.touch_out(exit_station)}.to change{card.balance}.by -(min_charge)
+    end
+  end
+
+  describe '#touch_in' do
+    it 'it touches in' do
+      card.top_up(1)
+      card.touch_in(entry_station)
+      expect(card).to be_in_journey
+    end
+
     it 'returns error:insufficient balance' do
-    expect{subject.touch_in(station)}.to raise_error "Insufficient balance"
-  end
-#before(:context) {subject.top_up(1)}
-  it 'returns true when in journey' do
-    subject.top_up(1)
-    subject.touch_in(station)
-    expect(subject).to be_in_journey
-  end
-  it 'returns false initially' do
-     subject.top_up(1)
-     expect(subject).not_to be_in_journey
-end
-end
+      expect{card.touch_in(entry_station)}.to raise_error "Insufficient balance"
+    end
 
-describe 'returns entry station' do
-  it 'remembers entry station' do
-     subject.top_up(10)
-     subject.touch_in(station)
-     expect(subject.entry_station).to eq station
-   end
- end
+  end
+
+  describe '#touch_out' do
+    it 'touches out' do
+      card.top_up(1)
+      card.touch_in(entry_station)
+      card.touch_out(exit_station)
+      expect(card).not_to be_in_journey
+    end
+  end
+
+  describe '#in_journey?' do
+    before(:each) { card.top_up(1) }
+
+    it 'returns true when in journey' do
+      card.touch_in(entry_station)
+      expect(card).to be_in_journey
+    end   
+
+    it 'returns false initially' do
+      expect(card).not_to be_in_journey
+    end
+  end
+
+  describe '#journeys' do
+    it 'initially be an empty array' do
+      expect(card.journeys).to eq []
+    end
+
+    it 'lists journies' do
+      card.top_up(10)
+      card.touch_in(entry_station)
+      card.touch_out(exit_station)
+      card.touch_in(exit_station)
+      card.touch_out(entry_station)
+      expect(card.journeys).to eq([journey1, journey2])
+    end
+  end
+
+  describe '#journey' do
+    it 'initially be an empty hash' do
+      expect(card.journey).to be_instance_of Hash
+    end
+  end
 end
 
 
