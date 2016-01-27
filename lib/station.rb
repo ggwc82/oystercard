@@ -1,4 +1,4 @@
 class Station
-  def initialize	
+  def initialize
   end
 end
