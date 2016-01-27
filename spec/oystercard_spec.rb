@@ -68,13 +68,7 @@ context "----journeys----" do
       expect(subject.in_journey).to eq false
     end
   end
-=begin
-  it 'stores the entry station' do
-	  subject.top_up(1)
-	  subject.touch_in(station)
-	  expect(subject.entry_station).to eq station
-  end
-=end
+
   describe '#previous_journeys' do
     it 'has default is empty' do
       expect(subject.previous_journeys).to eq ({})
