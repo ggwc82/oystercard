@@ -9,13 +9,12 @@ describe OysterCard do
 describe '#top_up' do
   it 'adds amount to balance' do
   expect{subject.top_up(1)}.to change{subject.balance}.by 1
- end 
 end
-
 it 'raises an error when balance greater than limit' do
     maximum_balance = OysterCard::MAXIMUM_BALANCE
     subject.top_up(maximum_balance)
 	expect{ subject.top_up(1) }.to raise_error "error balance greater than #{maximum_balance}"
+end
 end
 
  describe '#deduct' do
@@ -43,6 +42,10 @@ end
 end
 
  describe '#in_journey?' do
+    it 'returns error:insufficient balance' do
+    expect{subject.touch_in(station)}.to raise_error "Insufficient balance"
+  end
+#before(:context) {subject.top_up(1)}
   it 'returns true when in journey' do
     subject.top_up(1)
     subject.touch_in(station)
@@ -51,10 +54,6 @@ end
   it 'returns false initially' do
      subject.top_up(1)
      expect(subject).not_to be_in_journey
-end
-
-  it 'returns error:insufficient balance' do
-    expect{subject.touch_in(station)}.to raise_error "Insufficient balance"
 end
 end
 
@@ -65,8 +64,6 @@ describe 'returns entry station' do
      expect(subject.entry_station).to eq station
    end
  end
-
-
 end
 
 
