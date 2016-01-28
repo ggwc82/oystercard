@@ -21,12 +21,12 @@ class OysterCard
 
  def touch_in(entry_station)
  	raise 'Balance too low.' if below_min_balance?
-  @previous_journeys.merge!({'entry_station' => entry_station})
+  @previous_journeys.merge!({entry_station: entry_station})
  end
 
  def touch_out(exit_station)
  	deduct(MINIMUM_CHARGE)
-  @previous_journeys.merge!({'exit_station' => exit_station})
+  @previous_journeys.merge!({exit_station: exit_station})
   add_journey_to_array
   @previous_journeys = {}
  end
