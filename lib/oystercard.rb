@@ -5,12 +5,11 @@ class OysterCard
   MINIMUM_CHARGE = 1
 
   attr_reader :balance, :journeys, :journey
-  attr_accessor :in_journey
 
   def initialize
     @balance = 0 
-    @journeys = []
-    @journey = {}
+    @journeys = Journey.new
+    @journey = journeys.current
   end
 
   def top_up(amount)
@@ -20,18 +19,16 @@ class OysterCard
 
   def touch_in(station)
     raise "Insufficient balance" if insufficient_balance?
-    journey[:entry_station] = station
+    journeys.entry(station)
   end
 
   def touch_out(station)
     deduct(MINIMUM_CHARGE)
-    journey[:exit_station] = station
-    journeys << journey
-    @journey = {}
+    journeys.exit(station)
   end
 
   def in_journey?
-    journey.count == 1
+    journeys.in_transit?
   end
 
   private

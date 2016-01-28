@@ -70,7 +70,7 @@ describe OysterCard do
 
   describe '#journeys' do
     it 'initially be an empty array' do
-      expect(card.journeys).to eq []
+      expect(card.journeys.list).to eq []
     end
 
     it 'lists journies' do
@@ -79,7 +79,7 @@ describe OysterCard do
       card.touch_out(exit_station)
       card.touch_in(exit_station)
       card.touch_out(entry_station)
-      expect(card.journeys).to eq([journey1, journey2])
+      expect(card.journeys.list).to eq([journey1, journey2])
     end
   end
 
