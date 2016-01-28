@@ -24,13 +24,6 @@ context "----touching in and out ----" do
     end
 
   describe '#touch_in' do
-    it 'it touches in' do
-    subject.top_up(OysterCard::MINIMUM_BALANCE)
-    subject.touch_in(station)
-    expect(subject.in_journey).to eq(true)
-  end
-
-
 
     it 'cannot touch in unless minimum balance met' do
       maximum_balance = OysterCard::MAXIMUM_BALANCE
@@ -41,12 +34,6 @@ context "----touching in and out ----" do
   end
 
   describe '#touch_out' do
-    it 'touches out' do
-    subject.top_up(OysterCard::MINIMUM_BALANCE)
-    subject.touch_in(station)
-    subject.touch_out(station2)
-    expect(subject.in_journey).to eq(false)
-    end
 
     it 'charges for journey' do
  	  subject.top_up(1)
@@ -58,27 +45,28 @@ end
 
 context "----journeys----" do
 
-  describe '#in_journey?' do
-    it 'returns true when in journey' do
-  	  subject.top_up(OysterCard::MINIMUM_BALANCE)
-      subject.touch_in(station)
-      expect(subject.in_journey).to eq true
-    end
-    it 'returns false initially' do
-      expect(subject.in_journey).to eq false
-    end
-  end
 
   describe '#previous_journeys' do
     it 'has default is empty' do
       expect(subject.previous_journeys).to eq ({})
     end
 
-    it 'lists previous journeys' do
+  end
+
+  describe '#journeys' do
+    it 'responds' do
+      expect(subject).to respond_to(:journeys)
+    end
+
+    it 'returns an empty array' do
+      expect(subject.journeys).to eq([])
+    end
+
+    it 'returns an array with 1 journey/hash' do
       subject.top_up(1)
       subject.touch_in(station)
       subject.touch_out(station2)
-      expect(subject.previous_journeys).to eq ({'entry_station' => station, 'exit_station' => station2})
+      expect(subject.journeys).to eq([{'entry_station' => station, 'exit_station' => station2}])
     end
   end
 end
