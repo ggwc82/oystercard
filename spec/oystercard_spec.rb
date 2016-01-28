@@ -26,7 +26,7 @@ describe OysterCard do
 
   describe '#deduct' do
     it 'deducts the minimum' do
-      min_charge = OysterCard::MINIMUM_CHARGE
+      min_charge = 1
       card.top_up(10)
       card.touch_in(entry_station)
       expect{card.touch_out(exit_station)}.to change{card.balance}.by -(min_charge)
@@ -74,6 +74,7 @@ describe OysterCard do
     end
 
     it 'lists journies' do
+      
       card.top_up(10)
       card.touch_in(entry_station)
       card.touch_out(exit_station)
