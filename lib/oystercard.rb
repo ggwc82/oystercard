@@ -5,12 +5,13 @@ class OysterCard
  MINIMUM_BALANCE = 1
  MINIMUM_CHARGE = 1
 
- attr_reader :balance, :previous_journeys, :journeys
+ attr_reader :balance, :previous_journeys, :journeys, :history
  
  def initialize
    @balance = 0
    @previous_journeys = {}
    @journeys = []
+   @history = Journey.new
  end
 
  def top_up(amount)
@@ -30,10 +31,12 @@ def touch_out(exit_station)
   @previous_journeys = {}
 end
 
+
 private
 
 def add_journey_to_array
-  @journeys << @previous_journeys
+  @history.import(@previous_journeys)
+  #@journeys << @previous_journeys
 end
 
 def deduct(amount)
